@@ -1,3 +1,3 @@
 export const welcome = () => {
-    console.log('✨ Greetings! your app is up and running ✨');
+    return '✨ Greetings! your app is up and running ✨';
 }
