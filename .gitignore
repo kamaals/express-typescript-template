@@ -1,0 +1,8 @@
+node_modules
+.env
+.idea
+dist
+
+application.log
+.eslintcache
+coverage
