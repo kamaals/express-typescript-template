@@ -19,6 +19,12 @@ jobs:
           node-version-file: '.nvmrc'
           cache: "npm"
 
+      - name: Uninstall yarn
+        run: npm uninstall yarn
+
+      - name: Install yarn
+        run: npm install yarn
+
       - name: Install Dependencies
         run: yarn
 
