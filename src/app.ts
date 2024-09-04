@@ -1,6 +1,8 @@
-import {init} from "@/lib/init";
-import {welcome} from "@/lib/welcome";
+import { init } from "@/lib/init";
+import { welcome } from "@/lib/welcome";
+
+console.log("App started");
 
 init().then(() => {
-    console.log(welcome())
-})
+  console.log(welcome());
+});

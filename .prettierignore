@@ -1,8 +1,0 @@
-# Ignore artifacts:
-dist
-docker
-public
-node_modules
-.idea
-
-application.log
