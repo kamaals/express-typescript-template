@@ -20,7 +20,7 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: yarn ci
+        run: yarn install
 
       - name: Run Build
         run: yarn build
