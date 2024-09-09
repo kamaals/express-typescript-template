@@ -1,6 +1,4 @@
-<div style="width: 100%;">
-  <img src="assets/embedded.svg" style="width: 100%;" alt="Logo">
-</div>
+![](./assets/embedded.svg)
 
 [![Test](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml/badge.svg)](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml)
 [![Build](https://github.com/kamaal-/express-typescript-template/actions/workflows/build.yml/badge.svg)](https://github.com/kamaal-/express-typescript-template/actions/workflows/build.yml)
