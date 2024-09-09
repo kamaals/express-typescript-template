@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<body>
-    <div style="display: flex; align-items: center; column-gap: 2rem;">
+<svg fill="none" viewBox="0 0 600 400" width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+<foreignObject width="100%" height="100%">    
+<div style="display: flex; align-items: center; column-gap: 2rem;">
         <div style="object-fit: cover; flex-shrink: 1; width: 25rem">
         <img style="width: 100%;" src="./assets/logo@3x.png" alt="">
         </div> 
@@ -10,8 +9,8 @@
             <h2 style="margin: 0; padding: 0; color: #777;"> NodeJS Typescript + Express template </h2>
         </div>
     </div>
-</body>
-</html>
+</foreignObject>
+</svg>
 
 [![Test](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml/badge.svg)](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml)
 [![Build](https://github.com/kamaal-/express-typescript-template/actions/workflows/build.yml/badge.svg)](https://github.com/kamaal-/express-typescript-template/actions/workflows/build.yml)
