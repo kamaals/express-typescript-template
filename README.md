@@ -1,5 +1,5 @@
 <div style="width: 100%;">
-  <img src="assets/embedded.svg" style="width: 100%;" alt="Logo">
+  <img src="./assets/embedded.svg" style="width: 100%;" alt="Logo">
 </div>
 
 [![Test](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml/badge.svg)](https://github.com/kamaal-/express-typescript-template/actions/workflows/test.yml)
