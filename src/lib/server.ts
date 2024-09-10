@@ -13,8 +13,8 @@ export const getServer = (): Application => {
   app.use(express.json());
   app.use(helmet());
 
-  app.use('/heart-beat', heartBeat());
-  app.use('/swagger', getOpenApiRouter());
+  app.use(`/${env.VERSION}/heart-beat`, heartBeat());
+  app.use(`/${env.VERSION}/swagger`, getOpenApiRouter());
 
   return app;
 };

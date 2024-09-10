@@ -1,5 +1,6 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import { getHeartBeatRegistry } from "@/api/status/heart-beat";
+import { env } from '@/lib/config';
 
 export const generateOpenAPIDocument = () => {
   const registry = new OpenAPIRegistry([getHeartBeatRegistry()]);
@@ -13,7 +14,7 @@ export const generateOpenAPIDocument = () => {
     },
     externalDocs: {
       description: "View the raw OpenAPI Specification in JSON format",
-      url: "/swagger/json",
+      url: `/${env.VERSION}/swagger/json`,
     },
   });
 }
