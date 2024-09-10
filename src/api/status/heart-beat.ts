@@ -4,16 +4,24 @@ import {Router} from "express";
 import { createSuccessResponse, createSuccessResponseForSwagger } from '@/lib/services/success';
 import { z } from "zod";
 
-export const heartBeat = () => {
-  const healthCheckRegistry = new OpenAPIRegistry();
+/*
+ * This function creates a new OpenAPIRegistry and registers a path for the
+ * swagger UI
+ */
+export const getHeartBeatRegistry = () => {
+  const heartBeatRegistry = new OpenAPIRegistry();
 
-  healthCheckRegistry.registerPath({
+  heartBeatRegistry.registerPath({
     method: "get",
     path: "/heart-beat",
-    tags: ["Health Check"],
+    tags: ["Heart Beat"],
     responses: createSuccessResponseForSwagger(z.null()),
   });
 
+  return heartBeatRegistry
+}
+
+export const heartBeat = () => {
   const router = Router();
   router.get("/", (_: Request, res: Response) => {
     return createSuccessResponse(res, 'API is running healthy');

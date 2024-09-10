@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { env } from '@/lib/config';
 import { heartBeat } from '@/api/status/heart-beat';
+import { getOpenApiRouter } from '@/api/docs/open-api';
 
 export const getServer = (): Application => {
   const app = express();
@@ -13,6 +14,7 @@ export const getServer = (): Application => {
   app.use(helmet());
 
   app.use('/heart-beat', heartBeat());
+  app.use('/swagger', getOpenApiRouter());
 
   return app;
 };
