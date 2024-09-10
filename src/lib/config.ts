@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { cleanEnv, host, num, port, str, testOnly } from 'envalid';
+import { cleanEnv, host, port, str, testOnly } from 'envalid';
 import type {  ENV } from '@/@types';
 import { version } from '../../package.json';
 dotenv.config();
