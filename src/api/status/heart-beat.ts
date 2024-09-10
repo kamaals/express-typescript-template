@@ -1,7 +1,7 @@
+import { createSuccessResponse, createSuccessResponseForSwagger } from "@/lib/services/success";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import type {  Request,  Response } from "express";
-import {Router} from "express";
-import { createSuccessResponse, createSuccessResponseForSwagger } from '@/lib/services/success';
+import type { Request, Response } from "express";
+import { Router } from "express";
 import { z } from "zod";
 
 /*
@@ -18,13 +18,13 @@ export const getHeartBeatRegistry = () => {
     responses: createSuccessResponseForSwagger(z.null()),
   });
 
-  return heartBeatRegistry
-}
+  return heartBeatRegistry;
+};
 
 export const heartBeat = () => {
   const router = Router();
   router.get("/", (_: Request, res: Response) => {
-    return createSuccessResponse(res, 'API is running healthy');
+    return createSuccessResponse(res, "API is running healthy");
   });
   return router;
-}
+};

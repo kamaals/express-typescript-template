@@ -1,5 +1,5 @@
-import {z} from "zod";
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
 
 export class APIResponse<K = null> {
   readonly success: boolean;

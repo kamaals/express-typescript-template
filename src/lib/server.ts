@@ -1,10 +1,10 @@
-import express from 'express';
-import type { Application } from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import { env } from '@/lib/config';
-import { heartBeat } from '@/api/status/heart-beat';
-import { getOpenApiRouter } from '@/api/docs/open-api';
+import { getOpenApiRouter } from "@/api/docs/open-api";
+import { heartBeat } from "@/api/status/heart-beat";
+import { env } from "@/lib/config";
+import cors from "cors";
+import express from "express";
+import type { Application } from "express";
+import helmet from "helmet";
 
 export const getServer = (): Application => {
   const app = express();
