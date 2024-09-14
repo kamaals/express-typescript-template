@@ -10,4 +10,8 @@ export const env: ENV = cleanEnv(process.env, {
   HOST: host({ devDefault: testOnly("localhost") }),
   PORT: port({ devDefault: testOnly(3000) }),
   CORS_ORIGIN: str({ devDefault: testOnly("http://localhost:3000") }),
+  DATABASE_DOMAIN: str({devDefault: "localhost"}),
+  DATABASE_USER:str({devDefault: "admin"}),
+  DATABASE_PASSWORD: str({devDefault: "mypassword"}),
+  DATABASE: str({devDefault: "reward_fu"}),
 });
