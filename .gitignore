@@ -2,7 +2,8 @@ node_modules
 .env
 .idea
 dist
-
+@types
+logs
 application.log
 .eslintcache
 coverage

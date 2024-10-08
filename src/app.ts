@@ -1,8 +1,6 @@
 import { init } from "@/lib/init";
 import { welcome } from "@/lib/welcome";
-
-console.log("App started");
-
+import { mainLogger } from '@/lib/logger/winston';
 init().then(() => {
-  console.log(welcome());
+  mainLogger.info(welcome());
 });
