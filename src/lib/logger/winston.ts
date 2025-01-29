@@ -1,11 +1,13 @@
-import { getDebugLog, getErrorLog, getInfoLog, getSuccessLog, getWarnLog, levels } from "@/lib/logger/helper";
+import { levels } from "@/lib/logger/helper";
 import type { MorganMessage } from "@/lib/logger/logger";
-
 import type { TransformableInfo } from "logform";
 import { LEVEL, MESSAGE, SPLAT } from "triple-beam";
 import winston, { type LeveledLogMethod } from "winston";
+import { colored, getLogger, type LogLevelKeys } from "colorful-log-message";
 
 type WLogger = winston.Logger;
+
+export const colorfulLogger = getLogger(colored, "bullet-train");
 
 const prettyPrintWithColor = () =>
   winston.format.printf((message: TransformableInfo) => {
@@ -23,18 +25,11 @@ const prettyPrintWithColor = () =>
       // biome-ignore lint/performance/noDelete: <explanation>
       delete stripped.body;
     }
-    switch (stripped.level) {
-      case "error":
-        return getErrorLog(stripped);
-      case "success":
-        return getSuccessLog(stripped);
-      case "warn":
-        return getWarnLog(stripped);
-      case "debug":
-        return getDebugLog(stripped);
-      default:
-        return getInfoLog(stripped);
-    }
+    return colorfulLogger({
+      level: message.level as LogLevelKeys,
+      message: stripped,
+      subtitle: stripped.subtitle ?? "APP",
+    });
   });
 
 const format = winston.format.combine(
@@ -44,14 +39,11 @@ const format = winston.format.combine(
   prettyPrintWithColor(),
 );
 
-const transports = [
-  new winston.transports.Console({ level: "debug" }),
-  new winston.transports.File({
-    filename: "logs/error.log",
-    level: "error",
-  }),
-  new winston.transports.File({ filename: "logs/all.log" }),
-];
+/*
+ Create winston transporter
+ ex: create winston transporter for better stack
+ */
+const transports = [new winston.transports.Console({ level: "debug" })];
 
 export const mainLogger = winston.createLogger({
   levels,

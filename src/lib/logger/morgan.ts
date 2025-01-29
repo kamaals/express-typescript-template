@@ -11,4 +11,7 @@ export const morganMiddleware = morgan<
   },
   http.ServerResponse
   // @ts-ignore
->(logFormat, { stream: streamFunc() });
+>(logFormat, {
+  stream: streamFunc(),
+  skip: () => process.env.NODE_ENV === "test",
+});

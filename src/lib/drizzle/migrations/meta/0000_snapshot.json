@@ -1,55 +1,132 @@
 {
-  "id": "a4e0a6d2-3faf-42f2-ab70-d6ae9c66a79f",
+  "id": "8e07e6e6-50bf-4af5-916d-0a10421ad5a9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "my_schema.users": {
+    "app_schema.users": {
       "name": "users",
-      "schema": "my_schema",
+      "schema": "app_schema",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "color": {
-          "name": "color",
-          "type": "colors",
-          "typeSchema": "my_schema",
+        "role": {
+          "name": "role",
+          "type": "roles",
+          "typeSchema": "app_schema",
           "primaryKey": false,
           "notNull": false,
-          "default": "'red'"
+          "default": "'user'"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
+        },
+        "status": {
+          "name": "status",
+          "type": "userStatus",
+          "typeSchema": "app_schema",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
-    "my_schema.colors": {
-      "name": "colors",
-      "schema": "my_schema",
+    "app_schema.roles": {
+      "name": "roles",
+      "schema": "app_schema",
       "values": [
-        "red",
-        "green",
-        "blue"
+        "user",
+        "owner",
+        "staff",
+        "admin",
+        "super-admin"
+      ]
+    },
+    "app_schema.userStatus": {
+      "name": "userStatus",
+      "schema": "app_schema",
+      "values": [
+        "active",
+        "inactive"
       ]
     }
   },
   "schemas": {
-    "my_schema": "my_schema"
+    "app_schema": "app_schema"
   },
   "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

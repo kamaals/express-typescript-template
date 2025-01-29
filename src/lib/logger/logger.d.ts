@@ -1,5 +1,3 @@
-import type { Chalk } from "chalk";
-
 export type MorganMessage = {
   body?: Record<string, any>;
   query?: Record<string, any>;
@@ -17,11 +15,5 @@ export type MorganMessage = {
   name?: string;
   message: string;
   timestamp: string;
+  subtitle: string;
 };
-
-export type MessageBuilderFunc = (message: string, pad?: string) => string;
-export type SegmentFunc = (segment?: Chalk, title?: Chalk) => MessageBuilderFunc;
-export type ColorBuilderFunc = (
-  segmentBuilder: MessageBuilderFunc,
-  titleBuilder: MessageBuilderFunc,
-) => (message: MorganMessage) => string;

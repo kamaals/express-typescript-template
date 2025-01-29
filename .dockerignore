@@ -1,0 +1,9 @@
+.idea
+.github
+.env
+coverage
+assets
+.husky
+dist
+
+

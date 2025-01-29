@@ -1,5 +1,5 @@
-import { StatusCodes } from "http-status-codes";
-import { z } from "zod";
+import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
 
 export class APIResponse<K = null> {
   readonly success: boolean;
@@ -14,11 +14,11 @@ export class APIResponse<K = null> {
     this.statusCode = statusCode;
   }
 
-  static success<K>(message: string, data: K, statusCode: number = StatusCodes.OK) {
+  static success<K>(message: string, data: K, statusCode: StatusCodes = StatusCodes.OK) {
     return new APIResponse(true, message, data, statusCode);
   }
 
-  static failure<K>(message: string, data: K, statusCode: StatusCodes.BAD_REQUEST) {
+  static failure<K>(message: string, data: K, statusCode: StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR) {
     return new APIResponse(false, message, data, statusCode);
   }
 }
