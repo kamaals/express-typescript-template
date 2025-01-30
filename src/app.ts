@@ -10,4 +10,4 @@ init()
   .then(() => {
     mainLogger.info(welcome());
   })
-  .catch((e) => mainLogger.error("Cannot Start", {message: e}));
+  .catch((e) => mainLogger.error("Cannot Start", { message: e }));

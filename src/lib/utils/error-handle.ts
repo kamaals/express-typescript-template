@@ -21,8 +21,8 @@ export class ServerError extends Error {
   constructor(message: string, code: string, port: number) {
     super(message);
     this.name = "ServerError";
-    this.code = code
-    this.port = port
+    this.code = code;
+    this.port = port;
   }
 }
 

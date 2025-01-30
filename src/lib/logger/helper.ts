@@ -71,37 +71,27 @@ export const parseMorganString = (message: string): MorganMessage => {
   }
 };
 
-export const extractRequestBody = (
-  request: http.IncomingMessage & { body: Record<string, unknown> },
-) =>
-  request.method === "POST" || request.method === "PUT"
-    ? JSON.stringify(request.body)
-    : "null";
+export const extractRequestBody = (request: http.IncomingMessage & { body: Record<string, unknown> }) =>
+  request.method === "POST" || request.method === "PUT" ? JSON.stringify(request.body) : "null";
 
-export const extractRequestQuery = (
-  request: http.IncomingMessage & { query: Record<string, unknown> },
-) => JSON.stringify(request.query);
+export const extractRequestQuery = (request: http.IncomingMessage & { query: Record<string, unknown> }) =>
+  JSON.stringify(request.query);
 
-export const extractRequestParams = (
-  request: http.IncomingMessage & { params: Record<string, unknown> },
-) => JSON.stringify(request.params);
+export const extractRequestParams = (request: http.IncomingMessage & { params: Record<string, unknown> }) =>
+  JSON.stringify(request.params);
 
 export const extractValidationErrors = (
   request: http.IncomingMessage & {
     header: Record<"validation_errors", string>;
   },
-) =>
-  request.header.validation_errors ? request.header.validation_errors : "{}";
+) => (request.header.validation_errors ? request.header.validation_errors : "{}");
 
 export const streamFunc = (): StreamOptions => {
   return {
     write: (message: string) => {
       const jsonMessage = parseMorganString(message);
-      if (
-        jsonMessage.level === "error" ||
-        Number.parseInt(jsonMessage.status) > 399
-      ) {
-        return mainLogger.error(logNames.http.error, {...jsonMessage, subtitle: "HTTP FROM Morgan"});
+      if (jsonMessage.level === "error" || Number.parseInt(jsonMessage.status) > 399) {
+        return mainLogger.error(logNames.http.error, { ...jsonMessage, subtitle: "HTTP FROM Morgan" });
       }
       return mainLogger.http(logNames.http.success, {
         ...jsonMessage,
@@ -116,4 +106,3 @@ morgan.token("body", extractRequestBody);
 morgan.token("query", extractRequestQuery);
 morgan.token("params", extractRequestParams);
 morgan.token("validation_errors", extractValidationErrors);
-

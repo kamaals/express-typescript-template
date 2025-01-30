@@ -1,5 +1,5 @@
 import type { DB } from "@/@types";
-import {  User } from "@/lib/drizzle/schema";
+import { User } from "@/lib/drizzle/schema";
 import { hashUserPassword } from "@/lib/utils/auth";
 
 export const MOCK_USERS = [
@@ -24,7 +24,6 @@ export const MOCK_USERS = [
     password: "hello@#1235",
   },
 ];
-
 
 export const clearAllUsers = async (db: DB) => await db.delete(User);
 

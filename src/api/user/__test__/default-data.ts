@@ -1,4 +1,4 @@
-import type {  UserRequestWithToken } from '@/@types';
+import type { UserRequestWithToken } from "@/@types";
 import type { NextFunction, Response } from "express";
 
 export const updatedByValues = async (request: UserRequestWithToken, _: Response, next: NextFunction) => {

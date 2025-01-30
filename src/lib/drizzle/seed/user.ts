@@ -1,8 +1,8 @@
-import { seed } from "drizzle-seed";
 import type { DB } from "@/@types";
-import { User } from "@/lib/drizzle/schema";
 import { connectDB } from "@/lib/drizzle/db";
+import { User } from "@/lib/drizzle/schema";
 import { mainLogger } from "@/lib/logger/winston";
+import { seed } from "drizzle-seed";
 
 export const seedUser = async () => {
   const db = (await connectDB()) as unknown as DB;

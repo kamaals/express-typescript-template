@@ -1,15 +1,11 @@
 // biome-ignore lint/style/useImportType: <explanation>
 import * as schema from "@/lib/drizzle/schema";
-import type {
-  getUserByQuery,
-  insertUserSchema,
-  loginSchema,
-} from "@/lib/drizzle/schema";
+import type { getUserByQuery, insertUserSchema, loginSchema } from "@/lib/drizzle/schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Request, RequestHandler } from "express";
-import type { JWTPayload } from "jose";
-import type { infer as zInfer, ZodSchema } from "zod";
 import type { ParamsDictionary } from "express-serve-static-core";
+import type { JWTPayload } from "jose";
+import type { ZodSchema, infer as zInfer } from "zod";
 
 export type ENV = {
   VERSION: string;
@@ -47,11 +43,7 @@ export type UserRequestWithToken = Request<
   UserType & { decoded?: UserInToken; confirmPassword?: string }
 >;
 export type UserDelete = Request<{ id: string }, unknown, unknown>;
-export type UserQueryRequest = Request<
-  unknown,
-  zInfer<typeof getUserByQuery>,
-  unknown
->;
+export type UserQueryRequest = Request<unknown, zInfer<typeof getUserByQuery>, unknown>;
 
 export type LoginRequest = Request<any, any, zInfer<typeof loginSchema>>;
 

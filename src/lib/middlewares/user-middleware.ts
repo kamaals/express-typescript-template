@@ -1,8 +1,8 @@
-import type { DB,  UserRequest, UserRequestWithToken } from '@/@types';
+import type { DB, UserRequest, UserRequestWithToken } from "@/@types";
+import { mainLogger } from "@/lib/logger/winston";
 import { hashUserPassword, verifyToken } from "@/lib/utils/auth";
 import type { NextFunction, Response } from "express";
-import { mainLogger } from '@/lib/logger/winston';
-import getCurrentLine from 'get-current-line'
+import getCurrentLine from "get-current-line";
 
 export const userPasswordHashing = async (request: UserRequest, _: Response, next: NextFunction) => {
   request.body.password = await hashUserPassword(request.body.password);
@@ -28,7 +28,10 @@ export const verifyUserToken = async (request: UserRequestWithToken, response: R
   // biome-ignore lint/complexity/useLiteralKeys: <explanation>
   const token = (request.cookies["x-access-token"] || request.headers["authorization"] || "").replace(/bearer./gi, "");
   if (!token) {
-    mainLogger.error("No token provided", {message: {reason: "Auth failing due to no token provided", where: getCurrentLine()}, subtitle: "Auth Middleware"});
+    mainLogger.error("No token provided", {
+      message: { reason: "Auth failing due to no token provided", where: getCurrentLine() },
+      subtitle: "Auth Middleware",
+    });
     return response.status(401).json({ message: "Auth failed: No token provided" });
   }
   const decoded = await verifyToken(token);
@@ -38,7 +41,10 @@ export const verifyUserToken = async (request: UserRequestWithToken, response: R
   }
 
   if (!decoded) {
-    mainLogger.error("No token provided", {message: {reason: "Auth failing due to Auth failed: Invalid token", where: getCurrentLine()}, subtitle: "Auth Middleware"});
+    mainLogger.error("No token provided", {
+      message: { reason: "Auth failing due to Auth failed: Invalid token", where: getCurrentLine() },
+      subtitle: "Auth Middleware",
+    });
     return response.status(401).json({ message: "Auth failed: Invalid token" });
   }
 };

@@ -27,7 +27,6 @@ beforeAll(async () => {
 
   await clearAllUsers(db);
 
-
   // @ts-ignore
   userList = await insertAllUsers(db, roleList[0].id);
 
@@ -80,8 +79,6 @@ describe("User API", () => {
       expect(body.message).toEqual("Request params Validation Error");
       expect(statusCode).toBe(404);
     });
-
-
   });
 
   describe("POST user", () => {
@@ -178,7 +175,6 @@ describe("User API", () => {
         expect(body.data[0].field).toBe("email");
         expect(statusCode).toBe(400);
       });
-
     });
   });
 

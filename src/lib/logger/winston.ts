@@ -1,9 +1,9 @@
 import { levels } from "@/lib/logger/helper";
 import type { MorganMessage } from "@/lib/logger/logger";
+import { type LogLevelKeys, colored, getLogger } from "colorful-log-message";
 import type { TransformableInfo } from "logform";
 import { LEVEL, MESSAGE, SPLAT } from "triple-beam";
 import winston, { type LeveledLogMethod } from "winston";
-import { colored, getLogger, type LogLevelKeys } from "colorful-log-message";
 
 type WLogger = winston.Logger;
 

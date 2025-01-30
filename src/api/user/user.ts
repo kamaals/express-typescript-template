@@ -1,7 +1,7 @@
 import type { DB } from "@/@types";
+import { updatedByValues } from "@/api/user/__test__/default-data";
 import { createUser, deleteUser, getUser, getUserById, updateUser } from "@/api/user/controller";
 import { getUserByQuery, insertUserSchema, putByIDParam, updateUserSchema } from "@/lib/drizzle/schema";
-import { updatedByValues } from "@/api/user/__test__/default-data";
 import { injectDefaultRole, userPasswordHashing, verifyUserToken } from "@/lib/middlewares/user-middleware";
 import { validateRequestBody, validateRequestParams, validateRequestQuery } from "@/lib/middlewares/validate";
 import type { Router } from "express";
