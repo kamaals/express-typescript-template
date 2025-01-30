@@ -1,0 +1,1 @@
+ALTER TABLE "app_schema"."users" ALTER COLUMN "phone" SET DEFAULT ARRAY[]::text[];

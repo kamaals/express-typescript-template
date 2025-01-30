@@ -8,6 +8,13 @@
       "when": 1737984248685,
       "tag": "0000_outstanding_dazzler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738216009447,
+      "tag": "0001_military_vanisher",
+      "breakpoints": true
     }
   ]
 }

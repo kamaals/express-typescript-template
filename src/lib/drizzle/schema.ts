@@ -1,27 +1,35 @@
 import { text, pgSchema, varchar, uuid, timestamp } from "drizzle-orm/pg-core";
-import { env } from '@/lib/config';
-import { createInsertSchema } from 'drizzle-zod';
-import { object, string } from 'zod';
-import { validatePassword } from '@/lib/utils/password';
+import { env } from "@/lib/config";
+import { createInsertSchema } from "drizzle-zod";
+import { object, string } from "zod";
+import { validatePassword } from "@/lib/utils/password";
+import { sql } from "drizzle-orm";
 
 export const mySchema = pgSchema(env.DATABASE_NAMESPACE);
-export const userStatus = mySchema.enum('userStatus', ['active', 'inactive']);
-export const rolesEnum = mySchema.enum("roles", ["user", "owner", "staff", "admin", "super-admin"])
+export const userStatus = mySchema.enum("userStatus", ["active", "inactive"]);
+export const rolesEnum = mySchema.enum("roles", [
+  "user",
+  "owner",
+  "staff",
+  "admin",
+  "super-admin",
+]);
 
-export const User = mySchema.table('users', {
+export const User = mySchema.table("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   role: rolesEnum("role").default("user"),
   email: varchar("email").unique().notNull(),
-  phone: text("phone").notNull().array().default([]),
-  status: userStatus('status'),
+  phone: text("phone")
+    .array()
+    .default(sql`ARRAY[]::text[]`),
+  status: userStatus("status"),
   password: varchar("password").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   createdBy: uuid("created_by"),
   updatedBy: uuid("updatedBy"),
 });
-
 
 export const insertUserSchema = createInsertSchema(User, {
   email: (schema) => schema.email(),
@@ -48,7 +56,7 @@ export const putByIDParam = object({
 
 export const getUserByQuery = object({
   role: string().uuid().optional(),
-})
+});
 
 export const registerUserSchema = createInsertSchema(User, {
   email: (schema) => schema.email(),
@@ -61,7 +69,8 @@ export const registerUserSchema = createInsertSchema(User, {
   )
   .superRefine(validatePassword)
   .superRefine(({ password, confirmPassword }, ctx) => {
-    password === confirmPassword || ctx.addIssue({ code: "custom", message: "password does not match" });
+    password === confirmPassword ||
+      ctx.addIssue({ code: "custom", message: "password does not match" });
   })
   .superRefine(({ role }, ctx) => {
     if (role) {
