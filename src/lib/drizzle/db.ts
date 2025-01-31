@@ -11,8 +11,6 @@ export const connectDB = async () => {
   );
   return drizzle(client, {
     schema,
-    ...(process.env.NODE_ENV === "test"
-      ? {}
-      : { logger: new WinstonDrizzleLogger() }),
+    ...(process.env.NODE_ENV === "test" ? {} : { logger: new WinstonDrizzleLogger() }),
   });
 };

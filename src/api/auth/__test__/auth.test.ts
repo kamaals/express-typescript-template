@@ -41,9 +41,7 @@ describe("AUTH API", () => {
           });
         expect(statusCode).toBe(400);
         expect(body.data[0].code).toBe("unrecognized_keys");
-        expect(body.data[0].message).toBe(
-          "Unrecognized key(s) in object: 'roleId'",
-        );
+        expect(body.data[0].message).toBe("Unrecognized key(s) in object: 'roleId'");
       });
 
       it("👎 Should return 400 for password complexity ", async () => {
@@ -57,9 +55,7 @@ describe("AUTH API", () => {
           });
         expect(statusCode).toBe(400);
         expect(body.data[0].code).toBe("custom");
-        expect(body.data[0].message).toBe(
-          "password does not meet complexity requirements",
-        );
+        expect(body.data[0].message).toBe("password does not meet complexity requirements");
       });
 
       it("👎 Should return 400 for password mismatch ", async () => {

@@ -1,3 +1,4 @@
+import { before } from "node:test";
 import type { DB, UserType } from "@/@types";
 import { API_PATH } from "@/lib/config";
 import { getServer } from "@/lib/server";
@@ -5,7 +6,6 @@ import { MOCK_USERS, clearAllUsers, insertAllUsers } from "@/mock/users";
 import type { Application } from "express";
 import supertest from "supertest";
 import { connectDB } from "../../../lib/drizzle/db";
-import { before } from "node:test";
 
 let app: Application | null = null;
 let db: null | DB = null;
@@ -20,10 +20,7 @@ beforeAll(async () => {
   app = getServer(db);
   const user = MOCK_USERS[0];
 
-  userList =
-    typeof db.insert === "function"
-      ? ((await insertAllUsers(db)) as unknown as Array<UserType>)
-      : [];
+  userList = typeof db.insert === "function" ? ((await insertAllUsers(db)) as unknown as Array<UserType>) : [];
 
   const { body } = await supertest(app as Application)
     .post(`${API_PATH}login`)
@@ -152,9 +149,7 @@ describe("User API", () => {
           .send(userPasswordInvalid)
           .set("Authorization", `Bearer ${token}`);
         expect(statusCode).toBe(400);
-        expect(body.data[0].message).toBe(
-          "password does not meet complexity requirements",
-        );
+        expect(body.data[0].message).toBe("password does not meet complexity requirements");
       });
 
       it("👎 Should return 500 for db error", async () => {

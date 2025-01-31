@@ -1,7 +1,4 @@
-import type {
-  ValidateRequestBodyWithZod,
-  ValidateRequestParamWithZod,
-} from "@/@types";
+import type { ValidateRequestBodyWithZod, ValidateRequestParamWithZod } from "@/@types";
 import { createErrorResponse } from "@/lib/services/error";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -17,12 +14,7 @@ export const validateRequestBody: ValidateRequestBodyWithZod =
         field: error.path.join("."),
       }));
 
-      return createErrorResponse(
-        response,
-        data,
-        StatusCodes.BAD_REQUEST,
-        "Request body Validation Error",
-      );
+      return createErrorResponse(response, data, StatusCodes.BAD_REQUEST, "Request body Validation Error");
     }
   };
 
@@ -36,12 +28,7 @@ export const validateRequestParams: ValidateRequestParamWithZod = (schema) => {
         ...error,
         field: error.path.join("."),
       }));
-      return createErrorResponse(
-        response,
-        data,
-        StatusCodes.NOT_FOUND,
-        "Request params Validation Error",
-      );
+      return createErrorResponse(response, data, StatusCodes.NOT_FOUND, "Request params Validation Error");
     }
   };
 };
@@ -56,11 +43,6 @@ export const validateRequestQuery: ValidateRequestParamWithZod =
         ...error,
         field: error.path.join("."),
       }));
-      return createErrorResponse(
-        response,
-        data,
-        StatusCodes.NOT_FOUND,
-        "Request Query Validation Error",
-      );
+      return createErrorResponse(response, data, StatusCodes.NOT_FOUND, "Request Query Validation Error");
     }
   };

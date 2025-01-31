@@ -18,15 +18,8 @@ function createSuccessResponseForSwagger(data: z.ZodTypeAny) {
 /*
  * TODO: Fix logger message format
  */
-function createSuccessResponse<T>(
-  response: Response,
-  data: T,
-  status = StatusCodes.OK,
-  message = "Success",
-) {
-  return response
-    .status(status)
-    .send(APIResponse.success(message, data, status));
+function createSuccessResponse<T>(response: Response, data: T, status = StatusCodes.OK, message = "Success") {
+  return response.status(status).send(APIResponse.success(message, data, status));
 }
 
 export { createSuccessResponseForSwagger, createSuccessResponse };

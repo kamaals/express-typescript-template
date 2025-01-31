@@ -25,8 +25,7 @@ export const MOCK_USERS = [
   },
 ];
 
-export const clearAllUsers = async (db: DB) =>
-  typeof db.delete === "function" && (await db.delete(User));
+export const clearAllUsers = async (db: DB) => typeof db.delete === "function" && (await db.delete(User));
 
 export const insertAllUsers = async (db: DB) => {
   await clearAllUsers(db);
