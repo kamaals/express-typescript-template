@@ -1,8 +1,9 @@
-import type { ValidateRequestBodyWithZod, ValidateRequestParamWithZod } from "@/@types";
-import { mainLogger } from "@/lib/logger/winston";
+import type {
+  ValidateRequestBodyWithZod,
+  ValidateRequestParamWithZod,
+} from "@/@types";
 import { createErrorResponse } from "@/lib/services/error";
 import type { NextFunction, Request, Response } from "express";
-import getCurrentLine from "get-current-line";
 import { StatusCodes } from "http-status-codes";
 
 export const validateRequestBody: ValidateRequestBodyWithZod =
@@ -11,16 +12,17 @@ export const validateRequestBody: ValidateRequestBodyWithZod =
     if (parsed.success) {
       return next();
     } else {
-      const data = parsed.error.errors.map((error) => ({ ...error, field: error.path.join(".") }));
-      mainLogger.error("Body is invalid", {
-        message: {
-          reason: "Body is invalid",
-          data,
-          where: getCurrentLine(),
-        },
-        subtitle: "Body Validation Middleware",
-      });
-      return createErrorResponse(response, data, StatusCodes.BAD_REQUEST, "Request body Validation Error");
+      const data = parsed.error.errors.map((error) => ({
+        ...error,
+        field: error.path.join("."),
+      }));
+
+      return createErrorResponse(
+        response,
+        data,
+        StatusCodes.BAD_REQUEST,
+        "Request body Validation Error",
+      );
     }
   };
 
@@ -30,16 +32,16 @@ export const validateRequestParams: ValidateRequestParamWithZod = (schema) => {
     if (parsed.success) {
       return next();
     } else {
-      const data = parsed.error.errors.map((error) => ({ ...error, field: error.path.join(".") }));
-      mainLogger.error("Query is invalid", {
-        message: {
-          reason: "Query is invalid",
-          data,
-          where: getCurrentLine(),
-        },
-        subtitle: "Param Validation Middleware",
-      });
-      return createErrorResponse(response, data, StatusCodes.NOT_FOUND, "Request params Validation Error");
+      const data = parsed.error.errors.map((error) => ({
+        ...error,
+        field: error.path.join("."),
+      }));
+      return createErrorResponse(
+        response,
+        data,
+        StatusCodes.NOT_FOUND,
+        "Request params Validation Error",
+      );
     }
   };
 };
@@ -50,15 +52,15 @@ export const validateRequestQuery: ValidateRequestParamWithZod =
     if (parsed.success) {
       return next();
     } else {
-      const data = parsed.error.errors.map((error) => ({ ...error, field: error.path.join(".") }));
-      mainLogger.error("Query is invalid", {
-        message: {
-          reason: "Query is invalid",
-          data,
-          where: getCurrentLine(),
-        },
-        subtitle: "Query Validation Middleware",
-      });
-      return createErrorResponse(response, data, StatusCodes.NOT_FOUND, "Request Query Validation Error");
+      const data = parsed.error.errors.map((error) => ({
+        ...error,
+        field: error.path.join("."),
+      }));
+      return createErrorResponse(
+        response,
+        data,
+        StatusCodes.NOT_FOUND,
+        "Request Query Validation Error",
+      );
     }
   };

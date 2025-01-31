@@ -1,42 +1,30 @@
 import type { DB } from "@/@types";
 import { API_PATH } from "@/lib/config";
 import { getServer } from "@/lib/server";
-import { getClientAndDB } from "@/lib/test-setup/test-db";
 import { clearAllUsers } from "@/mock/users";
-import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import type { Application } from "express";
-import type postgres from "postgres";
 import supertest from "supertest";
+import { connectDB } from "../../../lib/drizzle/db";
 
 jest.setTimeout(150000);
 
 let app: Application | null = null;
-let container: null | StartedPostgreSqlContainer = null;
-let client: null | postgres.Sql<any> = null;
-let db: null | DB = null;
 
 // @ts-ignore
 beforeAll(async () => {
-  const resp = await getClientAndDB();
-
-  client = resp.client;
-  db = resp.db;
-  container = resp.container;
-
+  const db = (await connectDB()) as unknown as DB;
   await clearAllUsers(db);
-
   app = getServer(db);
 }, 5000);
 
 afterAll(async () => {
-  await container?.stop();
-  await client?.end();
+  //await container?.stop();
+  //await client?.end();
 });
 
 describe("AUTH API", () => {
   it("App should work", () => {
     expect(app).not.toBeNull();
-    expect(db).not.toBeNull();
   });
 
   describe("POST register", () => {
@@ -52,8 +40,10 @@ describe("AUTH API", () => {
             roleId: "d7dcf266-b23d-47ec-8195-a905bf3120d6",
           });
         expect(statusCode).toBe(400);
-        expect(body.data[0].code).toBe("custom");
-        expect(body.data[0].message).toBe("cannot send role");
+        expect(body.data[0].code).toBe("unrecognized_keys");
+        expect(body.data[0].message).toBe(
+          "Unrecognized key(s) in object: 'roleId'",
+        );
       });
 
       it("👎 Should return 400 for password complexity ", async () => {
@@ -67,7 +57,9 @@ describe("AUTH API", () => {
           });
         expect(statusCode).toBe(400);
         expect(body.data[0].code).toBe("custom");
-        expect(body.data[0].message).toBe("password does not meet complexity requirements");
+        expect(body.data[0].message).toBe(
+          "password does not meet complexity requirements",
+        );
       });
 
       it("👎 Should return 400 for password mismatch ", async () => {

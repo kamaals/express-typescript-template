@@ -9,5 +9,10 @@ export const connectDB = async () => {
     `postgres://${env.DATABASE_USER}:${env.DATABASE_PASSWORD}@${env.DATABASE_DOMAIN}:5432/${env.DATABASE}`,
     { max: 1 },
   );
-  return drizzle(client, { schema, logger: new WinstonDrizzleLogger() });
+  return drizzle(client, {
+    schema,
+    ...(process.env.NODE_ENV === "test"
+      ? {}
+      : { logger: new WinstonDrizzleLogger() }),
+  });
 };

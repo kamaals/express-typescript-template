@@ -16,6 +16,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "allowJs": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "plugins": [{ "transform": "typescript-transform-paths" }]

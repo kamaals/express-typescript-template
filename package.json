@@ -60,7 +60,7 @@
     "@asteasolutions/zod-to-openapi": "^7.1.1",
     "@date-fns/tz": "^1.1.2",
     "bcryptjs": "^2.4.3",
-    "colorful-log-message": "^1.9.0",
+    "colorful-log-message": "^1.11.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",

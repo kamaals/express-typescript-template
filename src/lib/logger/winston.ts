@@ -1,9 +1,9 @@
-import { levels } from "@/lib/logger/helper";
 import type { MorganMessage } from "@/lib/logger/logger";
 import { type LogLevelKeys, colored, getLogger } from "colorful-log-message";
 import type { TransformableInfo } from "logform";
 import { LEVEL, MESSAGE, SPLAT } from "triple-beam";
 import winston, { type LeveledLogMethod } from "winston";
+import type { levels } from "@/lib/logger/helper";
 
 type WLogger = winston.Logger;
 
@@ -43,10 +43,20 @@ const format = winston.format.combine(
  Create winston transporter
  ex: create winston transporter for better stack
  */
-const transports = [new winston.transports.Console({ level: "debug" })];
+const transports =
+  process.env.NODE_ENV === "test"
+    ? []
+    : [new winston.transports.Console({ level: "debug" })];
 
 export const mainLogger = winston.createLogger({
-  levels,
+  levels: {
+    error: 0,
+    warn: 1,
+    info: 2,
+    http: 3,
+    success: 4,
+    debug: 5,
+  },
   transports,
   format,
 }) as WLogger & Record<keyof typeof levels, LeveledLogMethod>;

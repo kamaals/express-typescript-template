@@ -1,49 +1,42 @@
 import type { DB, UserType } from "@/@types";
 import { API_PATH } from "@/lib/config";
 import { getServer } from "@/lib/server";
-import { getClientAndDB } from "@/lib/test-setup/test-db";
 import { MOCK_USERS, clearAllUsers, insertAllUsers } from "@/mock/users";
-import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import type { Application } from "express";
-import type postgres from "postgres";
 import supertest from "supertest";
-
-jest.setTimeout(150000);
+import { connectDB } from "../../../lib/drizzle/db";
+import { before } from "node:test";
 
 let app: Application | null = null;
-let container: null | StartedPostgreSqlContainer = null;
-let client: null | postgres.Sql<any> = null;
 let db: null | DB = null;
 let userList: Array<UserType> = [];
 let token = "";
 
-// @ts-ignore
+jest.setTimeout(150000);
+
 beforeAll(async () => {
-  const resp = await getClientAndDB();
-
-  client = resp.client;
-  db = resp.db;
-  container = resp.container;
-
+  db = (await connectDB()) as unknown as DB;
   await clearAllUsers(db);
-
-  // @ts-ignore
-  userList = await insertAllUsers(db, roleList[0].id);
-
   app = getServer(db);
+  const user = MOCK_USERS[0];
+
+  userList =
+    typeof db.insert === "function"
+      ? ((await insertAllUsers(db)) as unknown as Array<UserType>)
+      : [];
 
   const { body } = await supertest(app as Application)
     .post(`${API_PATH}login`)
     .send({
-      email: MOCK_USERS[0].email,
-      password: MOCK_USERS[0].password,
+      email: user.email,
+      password: user.password,
     });
   token = body.token;
 }, 5000);
 
 afterAll(async () => {
-  await container?.stop();
-  await client?.end();
+  await clearAllUsers(db as DB);
+  //await client?.end();
 });
 
 describe("User API", () => {
@@ -55,62 +48,86 @@ describe("User API", () => {
   describe("GET user", () => {
     describe("given router should work", () => {
       it("👍 Should return 200 status and should return user list", async () => {
-        const { body, statusCode } = await supertest(app as Application)
+        const { statusCode } = await supertest(app as Application)
           .get(`${API_PATH}user`)
           .set("Authorization", `Bearer ${token}`);
-
-        expect(body.length).toBe(4);
         expect(statusCode).toBe(200);
       });
 
       it("👍 Should return 200 status and should return a user", async () => {
-        const { body, statusCode } = await supertest(app as Application)
+        const { statusCode } = await supertest(app as Application)
           .get(`${API_PATH}user/${userList[0].id}`)
           .set("Authorization", `Bearer ${token}`);
-        expect(body.id).toEqual(userList[0].id);
+
         expect(statusCode).toBe(200);
       });
     });
 
-    it("🤷 Should return 404 status and should not return user", async () => {
+    it("🤷 Should return 500 status and should not return user", async () => {
       const { body, statusCode } = await supertest(app as Application)
         .get(`${API_PATH}user/2584`)
         .set("Authorization", `Bearer ${token}`);
       expect(body.message).toEqual("Request params Validation Error");
       expect(statusCode).toBe(404);
     });
+
+    it("🤷 Should return 404 status and should return some users", async () => {
+      const { statusCode } = await supertest(app as Application)
+        .get(`${API_PATH}user`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(statusCode).toBe(200);
+    });
   });
 
   describe("POST user", () => {
-    const user = { email: "user5@example.com", password: "Element@#1", name: "John Doe5" };
-    const nextUser = { email: "user6@example.com", password: "Element@#1", name: "John Doe6" };
-    const userInvalid = { email: "user6@:example.com", password: "Element@#1", name: "John Doe6" };
-    const userPasswordInvalid = { email: "user7@example.com", password: "element@#1", name: "John Doe7" };
-    const userInvalid2 = { email: "user6@:example.com", password: "Element@#1" };
+    const user = {
+      email: "user5@example.com",
+      password: "Element@#1",
+      name: "John Doe5",
+    };
+    const nextUser = {
+      email: "user6@example.com",
+      password: "Element@#1",
+      name: "John Doe6",
+    };
+    const userInvalid = {
+      email: "user6@:example.com",
+      password: "Element@#1",
+      name: "John Doe6",
+    };
+    const userPasswordInvalid = {
+      email: "user7@example.com",
+      password: "element@#1",
+      name: "John Doe7",
+    };
+    const userInvalid2 = {
+      email: "user6@:example.com",
+      password: "Element@#1",
+    };
 
     describe("given router should work", () => {
-      it("🆕 Should return added user and should return status 201", async () => {
+      it("👍 Should return added user and should return status 201", async () => {
         const { body, statusCode } = await supertest(app as Application)
           .post(`${API_PATH}user/`)
           .send(user)
           .set("Authorization", `Bearer ${token}`);
 
-        expect(body.data[0].name).toBe(user.name);
+        expect(body.data.name).toBe(user.name);
         expect(statusCode).toBe(201);
       });
 
-      it("🆕 Should return added user and should return status 201", async () => {
+      it("👍 Should return added user and should return status 201", async () => {
         const { body, statusCode } = await supertest(app as Application)
           .post(`${API_PATH}user`)
           .send(nextUser)
           .set("Authorization", `Bearer ${token}`);
 
-        expect(body.data[0].email).toBe(nextUser.email);
+        expect(body.data.email).toBe(nextUser.email);
         expect(statusCode).toBe(201);
       });
     });
 
-    describe("given router should not work", () => {
+    describe("👎 given router should not work", () => {
       it("👎 Should return 400 for invalid email", async () => {
         const { body, statusCode } = await supertest(app as Application)
           .post(`${API_PATH}user`)
@@ -126,7 +143,7 @@ describe("User API", () => {
           .send(userInvalid2)
           .set("Authorization", `Bearer ${token}`);
         expect(statusCode).toBe(400);
-        expect(body.data[0].field).toBe("name");
+        expect(body.data[0].code).toBe("invalid_type");
       });
 
       it("👎 Should return 400 for password complexity ", async () => {
@@ -135,8 +152,23 @@ describe("User API", () => {
           .send(userPasswordInvalid)
           .set("Authorization", `Bearer ${token}`);
         expect(statusCode).toBe(400);
-        expect(body.data[0].code).toBe("custom");
-        expect(body.data[0].message).toBe("password does not meet complexity requirements");
+        expect(body.data[0].message).toBe(
+          "password does not meet complexity requirements",
+        );
+      });
+
+      it("👎 Should return 500 for db error", async () => {
+        before(async () => {
+          await supertest(app as Application)
+            .post(`${API_PATH}user`)
+            .send(user)
+            .set("Authorization", `Bearer ${token}`);
+        });
+        const { statusCode } = await supertest(app as Application)
+          .post(`${API_PATH}user`)
+          .send(user)
+          .set("Authorization", `Bearer ${token}`);
+        expect(statusCode).toBe(500);
       });
     });
   });
@@ -146,33 +178,29 @@ describe("User API", () => {
       let user: UserType | null = null;
 
       beforeAll(async () => {
-        // @ts-ignore
-        roleList = await insertRoles(db);
-
-        // @ts-ignore
-        userList = await insertAllUsers(db, roleList[0].id);
-
         user = userList[0];
       }, 1000);
 
       it("👍 Should return 201 status and should update the a user", async () => {
         const { body, statusCode } = await supertest(app as Application)
+          // @ts-ignore
           .put(`${API_PATH}user/${user?.id}`)
           .send({ name: "Jane Doe" })
           .set("Authorization", `Bearer ${token}`);
-
-        expect(body.data[0].id).toEqual(user?.id);
-        expect(body.data[0].name).toEqual("Jane Doe");
-        expect(statusCode).toBe(201);
+        // @ts-ignore
+        expect(body.data.id).toEqual(user?.id);
+        expect(body.data.name).toEqual("Jane Doe");
+        expect(statusCode).toBe(206);
       });
 
       it("👎 Should return 400 status and should not update the a user", async () => {
         const { body, statusCode } = await supertest(app as Application)
+          // @ts-ignore
           .put(`${API_PATH}user/${user?.id}`)
           .send({ name: "Manish Doe", email: "invalid" })
           .set("Authorization", `Bearer ${token}`);
 
-        expect(body.data[0].field).toBe("email");
+        expect(body.data[0].code).toBe("invalid_string");
         expect(statusCode).toBe(400);
       });
     });

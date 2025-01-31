@@ -1,12 +1,17 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
+
+require("dotenv").config({
+  path: ".env.test",
+});
+
 module.exports = {
-  rootDir: '.',
-  testEnvironment: 'node',
+  rootDir: ".",
+  testEnvironment: "node",
   transform: {
-    '^.+.ts': ['ts-jest', {}]
+    "^.+.ts": ["ts-jest", {}],
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   modulePathIgnorePatterns: ["@types", "dist"],
   collectCoverage: true,
@@ -18,7 +23,7 @@ module.exports = {
       statements: 0,
     },
   },
-  collectCoverageFrom: ['src/**/*.ts'],
-  coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'json', 'html']
+  collectCoverageFrom: ["src/**/*.ts"],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov", "json", "html"],
 };
