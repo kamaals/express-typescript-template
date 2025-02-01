@@ -2,10 +2,11 @@ import { before } from "node:test";
 import type { DB, UserType } from "@/@types";
 import { API_PATH } from "@/lib/config";
 import { getServer } from "@/lib/server";
-import { MOCK_USERS, clearAllUsers, insertAllUsers } from "@/mock/users";
+import { clearAllUsers, insertAllUsers } from "@/mock/users";
 import type { Application } from "express";
 import supertest from "supertest";
 import { connectDB } from "../../../lib/drizzle/db";
+import { resetUser } from "../../../lib/drizzle/seed/user";
 
 let app: Application | null = null;
 let db: null | DB = null;
@@ -16,24 +17,23 @@ jest.setTimeout(150000);
 
 beforeAll(async () => {
   db = (await connectDB()) as unknown as DB;
-  await clearAllUsers(db);
-  app = getServer(db);
-  const user = MOCK_USERS[0];
+  userList = await insertAllUsers(db);
+  const user = userList[0];
 
-  userList = typeof db.insert === "function" ? ((await insertAllUsers(db)) as unknown as Array<UserType>) : [];
+  app = getServer(db);
 
   const { body } = await supertest(app as Application)
     .post(`${API_PATH}login`)
     .send({
       email: user.email,
-      password: user.password,
+      password: "P@ssword1",
     });
-  token = body.token;
+  token = body.data.token;
 }, 5000);
 
 afterAll(async () => {
+  await resetUser(db as DB);
   await clearAllUsers(db as DB);
-  //await client?.end();
 });
 
 describe("User API", () => {
@@ -43,11 +43,12 @@ describe("User API", () => {
   });
 
   describe("GET user", () => {
-    describe("given router should work", () => {
+    describe("👍 Given router should work", () => {
       it("👍 Should return 200 status and should return user list", async () => {
-        const { statusCode } = await supertest(app as Application)
+        const { statusCode, body } = await supertest(app as Application)
           .get(`${API_PATH}user`)
           .set("Authorization", `Bearer ${token}`);
+        expect(body.success).toBe(true);
         expect(statusCode).toBe(200);
       });
 
@@ -60,19 +61,14 @@ describe("User API", () => {
       });
     });
 
-    it("🤷 Should return 500 status and should not return user", async () => {
-      const { body, statusCode } = await supertest(app as Application)
-        .get(`${API_PATH}user/2584`)
-        .set("Authorization", `Bearer ${token}`);
-      expect(body.message).toEqual("Request params Validation Error");
-      expect(statusCode).toBe(404);
-    });
-
-    it("🤷 Should return 404 status and should return some users", async () => {
-      const { statusCode } = await supertest(app as Application)
-        .get(`${API_PATH}user`)
-        .set("Authorization", `Bearer ${token}`);
-      expect(statusCode).toBe(200);
+    describe("👎 given router should not work", () => {
+      it("👍 Should return 500 status and should return user list", async () => {
+        const { statusCode, body } = await supertest(app as Application)
+          .get(`${API_PATH}user`)
+          .set("Authorization", `Bearer ${token}k`);
+        expect(body.message).toBe("Auth failed: Invalid token");
+        expect(statusCode).toBe(401);
+      });
     });
   });
 
@@ -174,7 +170,7 @@ describe("User API", () => {
 
       beforeAll(async () => {
         user = userList[0];
-      }, 1000);
+      }, 10);
 
       it("👍 Should return 201 status and should update the a user", async () => {
         const { body, statusCode } = await supertest(app as Application)

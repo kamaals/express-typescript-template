@@ -34,9 +34,9 @@ export const login = (db: DB) => async (request: LoginRequest, response: Respons
           httpOnly: true,
           domain: "localhost",
         });
-        response.status(StatusCodes.OK).send({ token });
+        createSuccessResponse<{ token: string | null }>(response, { token }, StatusCodes.OK);
       } else {
-        response.status(StatusCodes.FORBIDDEN).send("Invalid credentials");
+        createErrorResponse<string>(response, "Password Mismatch", StatusCodes.FORBIDDEN);
       }
     }
   } catch (e) {

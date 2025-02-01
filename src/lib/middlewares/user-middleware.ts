@@ -25,11 +25,18 @@ export const injectDefaultRole = (_: DB) => async (request: UserRequest, _: Resp
 };
 
 export const verifyUserToken = async (request: UserRequestWithToken, response: Response, next: NextFunction) => {
-  // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-  const token = (request.cookies["x-access-token"] || request.headers["authorization"] || "").replace(/bearer./gi, "");
+  const token = (
+    request.cookies["x-access-token"] ||
+    // biome-ignore lint/complexity/useLiteralKeys: <explanation>
+    request.headers["authorization"] ||
+    ""
+  ).replace(/bearer./gi, "");
   if (!token) {
     mainLogger.error("No token provided", {
-      message: { reason: "Auth failing due to no token provided", where: getCurrentLine() },
+      message: {
+        reason: "Auth failing due to no token provided",
+        where: getCurrentLine(),
+      },
       subtitle: "Auth Middleware",
     });
     return response.status(401).json({ message: "Auth failed: No token provided" });
@@ -41,10 +48,6 @@ export const verifyUserToken = async (request: UserRequestWithToken, response: R
   }
 
   if (!decoded) {
-    mainLogger.error("No token provided", {
-      message: { reason: "Auth failing due to Auth failed: Invalid token", where: getCurrentLine() },
-      subtitle: "Auth Middleware",
-    });
     return response.status(401).json({ message: "Auth failed: Invalid token" });
   }
 };

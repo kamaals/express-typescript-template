@@ -1,25 +1,29 @@
-import type { DB } from "@/@types";
+import type { DB, UserType } from "@/@types";
 import { API_PATH } from "@/lib/config";
 import { getServer } from "@/lib/server";
-import { clearAllUsers } from "@/mock/users";
+import { clearAllUsers, insertAllUsers } from "@/mock/users";
 import type { Application } from "express";
 import supertest from "supertest";
 import { connectDB } from "../../../lib/drizzle/db";
+import { resetUser } from "../../../lib/drizzle/seed/user";
 
-jest.setTimeout(150000);
+jest.setTimeout(15000);
 
 let app: Application | null = null;
+let db: null | DB = null;
+let userList: Array<UserType> = [];
 
 // @ts-ignore
 beforeAll(async () => {
-  const db = (await connectDB()) as unknown as DB;
-  await clearAllUsers(db);
+  db = await connectDB();
+  db = (await connectDB()) as unknown as DB;
+  userList = await insertAllUsers(db);
   app = getServer(db);
 }, 5000);
 
 afterAll(async () => {
-  //await container?.stop();
-  //await client?.end();
+  await resetUser(db as DB);
+  await clearAllUsers(db as DB);
 });
 
 describe("AUTH API", () => {
@@ -89,12 +93,31 @@ describe("AUTH API", () => {
     });
   });
 
-  /*
-   * TODO: Add test for login
-   */
   describe("POST login", () => {
-    describe("API SHOULD FAIL", () => {});
+    describe("API SHOULD PASS", () => {
+      it("👍 Should login user", async () => {
+        const user = userList[0];
+        const { body, statusCode } = await supertest(app as Application)
+          .post(`${API_PATH}login/`)
+          .send({
+            email: user.email,
+            password: "P@ssword1",
+          });
+        expect(body.token).not.toBeNull();
+        expect(statusCode).toBe(200);
+      });
 
-    describe("API SHOULD PASS", () => {});
+      it("👎 Should return 403 status and should not login.", async () => {
+        const user = userList[0];
+        const { body, statusCode } = await supertest(app as Application)
+          .post(`${API_PATH}login/`)
+          .send({
+            email: user.email,
+            password: `${user.password} wrong`,
+          });
+        expect(body.data).toBe("Password Mismatch");
+        expect(statusCode).toBe(403);
+      });
+    });
   });
 });

@@ -1,6 +1,6 @@
 import type { DB } from "@/@types";
 import { User } from "@/lib/drizzle/schema";
-import { hashUserPassword } from "@/lib/utils/auth";
+import { getAllUsers, resetUser, seedUser } from "@/lib/drizzle/seed/user";
 
 export const MOCK_USERS = [
   {
@@ -29,21 +29,7 @@ export const clearAllUsers = async (db: DB) => typeof db.delete === "function" &
 
 export const insertAllUsers = async (db: DB) => {
   await clearAllUsers(db);
-  return (
-    await Promise.all(
-      MOCK_USERS.map(
-        async (u) =>
-          typeof db.insert === "function" &&
-          (await db
-            .insert(User)
-            // @ts-ignore
-            .values({
-              ...u,
-              role: "user",
-              password: await hashUserPassword(u.password),
-            })
-            .returning()),
-      ),
-    )
-  ).flat();
+  await resetUser(db);
+  await seedUser(db);
+  return getAllUsers(db);
 };

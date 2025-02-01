@@ -7,3 +7,4 @@ logs
 application.log
 .eslintcache
 coverage
+.env.test
