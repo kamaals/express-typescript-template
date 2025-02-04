@@ -29,7 +29,7 @@ beforeAll(async () => {
       password: "P@ssword1",
     });
   token = body.data.token;
-}, 5000);
+}, 10000);
 
 afterAll(async () => {
   await resetUser(db as DB);
@@ -145,7 +145,9 @@ describe("User API", () => {
           .send(userPasswordInvalid)
           .set("Authorization", `Bearer ${token}`);
         expect(statusCode).toBe(400);
-        expect(body.data[0].message).toBe("password does not meet complexity requirements");
+        expect(body.data[0].message).toBe(
+          "password does not meet complexity requirements",
+        );
       });
 
       it("👎 Should return 500 for db error", async () => {

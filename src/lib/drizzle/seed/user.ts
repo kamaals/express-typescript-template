@@ -15,7 +15,7 @@ export const seedUser = async (db: DB) => {
           }),
           name: f.fullName(),
           role: f.valuesFromArray({
-            values: ["user", "owner", "staff"],
+            values: ["user", "student", "parent", "teacher"],
           }),
           phone: f.phoneNumber({
             prefixes: ["+380 99", "+380 67", "+1"],

@@ -54,7 +54,7 @@
     "drizzle:gen": "drizzle-kit generate --config=src/lib/drizzle/drizzle.config.ts",
     "drizzle:std": "drizzle-kit studio --config=src/lib/drizzle/drizzle.config.ts",
     "drizzle:mig": "drizzle-kit migrate --config=src/lib/drizzle/drizzle.config.ts",
-    "add:user": "tsx ./src/lib/drizzle/seed/user.ts"
+    "add:user": "tsx ./src/mock/users.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.1",

@@ -1,9 +1,28 @@
 import type { DB } from "@/@types";
 import { updatedByValues } from "@/api/user/__test__/default-data";
-import { createUser, deleteUser, getUser, getUserById, updateUser } from "@/api/user/controller";
-import { getUserByQuery, insertUserSchema, putByIDParam, updateUserSchema } from "@/lib/drizzle/schema";
-import { injectDefaultRole, userPasswordHashing, verifyUserToken } from "@/lib/middlewares/user-middleware";
-import { validateRequestBody, validateRequestParams, validateRequestQuery } from "@/lib/middlewares/validate";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  getUserById,
+  updateUser,
+} from "@/api/user/controller";
+import {
+  getUserByQuery,
+  insertUserSchema,
+  putByIDParam,
+  updateUserSchema,
+} from "@/lib/drizzle/schema";
+import {
+  injectDefaultRole,
+  userPasswordHashing,
+  verifyUserToken,
+} from "@/lib/middlewares/user-middleware";
+import {
+  validateRequestBody,
+  validateRequestParams,
+  validateRequestQuery,
+} from "@/lib/middlewares/validate";
 import type { Router } from "express";
 
 export const user = (router: Router, db: DB) => {
@@ -15,9 +34,14 @@ export const user = (router: Router, db: DB) => {
     createUser(db),
   );
 
-  router.get("/user", validateRequestQuery(getUserByQuery), verifyUserToken, getUser(db));
+  router.get("/user", validateRequestQuery(getUserByQuery), getUser(db));
 
-  router.get("/user/:id", validateRequestParams(putByIDParam), verifyUserToken, getUserById(db));
+  router.get(
+    "/user/:id",
+    validateRequestParams(putByIDParam),
+    verifyUserToken,
+    getUserById(db),
+  );
 
   router.put(
     "/user/:id",
@@ -28,7 +52,12 @@ export const user = (router: Router, db: DB) => {
     updateUser(db),
   );
 
-  router.delete("/user/:id", validateRequestParams(putByIDParam), verifyUserToken, deleteUser(db));
+  router.delete(
+    "/user/:id",
+    validateRequestParams(putByIDParam),
+    verifyUserToken,
+    deleteUser(db),
+  );
 
   return router;
 };
