@@ -1,6 +1,4 @@
 /* istanbul ignore */
-import * as postgres from "postgres";
-
 export class JWTError extends Error {
   constructor(message: string) {
     super(message);
@@ -31,13 +29,7 @@ export const handleError = (
   err: unknown | (unknown & { message?: string }),
 ) => {
   const withMessage = err as unknown & { message?: string };
-  if (
-    err instanceof postgres.PostgresError &&
-    err.code === "23505" &&
-    err.table_name === "users"
-  ) {
-    return "User with same email already exists";
-  }
+
   if (err instanceof ValidationError) {
     return err.message;
   }

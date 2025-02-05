@@ -26,6 +26,5 @@ export const env: ENV = cleanEnv(process.env, {
   PRIVATE_KEY_PATH: str({ devDefault: "private.pem" }),
 });
 
-export const DB_URL = `postgresql://${env.DATABASE_USER}:${env.DATABASE_PASSWORD}@${env.DATABASE_DOMAIN}:${env.DATABASE_PORT}/${env.DATABASE}`;
 export const SWAGGER_PATH = "docs";
 export const API_PATH = `/api/${env.VERSION}/`;

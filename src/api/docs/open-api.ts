@@ -11,7 +11,7 @@ export const getOpenApiRouter = () => {
     response.setHeader("Content-Type", "application/json");
     response.status(StatusCodes.OK).send(docs);
   });
-
+  // @ts-ignore
   router.use("/", swaggerUi.serve, swaggerUi.setup(docs));
 
   return router;
